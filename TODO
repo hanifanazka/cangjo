@@ -1,0 +1,18 @@
+[x]  1. Learn how to publish a stream
+[x]  2. Learn how to subscribe a stream
+[x]  3. Build the program use scheme
+
+scheme:
+1. Subscriber create a room
+2. Subscriber subscribe to every incoming stream
+3. Publisher join a room
+4. Subscriber able to focus a stream in new window
+
+[x]  1. Find development and production orchestration
+[x]  2. Convert all html pages to ejs
+[x]  3. Clean public folder
+[-]  4. Mind to use webpack
+[x]  5. Simplify all client js code
+[ ]  6. Solve ICE stag issue
+[x]  7. Simplify all server js code
+[-]  8. Mind to use gulp

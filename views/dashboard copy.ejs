@@ -1,0 +1,128 @@
+<% var title = 'Dashboard' %>
+<% include head %>
+<style>
+  [v-cloak] {
+    display: none;
+  }
+
+  .session-name {
+    display: none;
+  }
+
+  .card-hovered .session-name {
+    display: unset !important;
+  }
+</style>
+
+
+<nav class="navbar navbar-light bg-light">
+  <div class="navbar-brand">Cangjo</div>
+  <div class="form-inline">
+    <a href="/logout" class="btn text-danger">Logout</a>
+  </div>
+</nav>
+<div class="container pt-5">
+  <button type="button" class="btn btn-primary mb-3" onclick="addCamera()">Add</button>
+  <div class="row" id="OVsList">
+    <div class="col-md-6" v-if="OVs.length == 0">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Welcome 👋</h5>
+          <p class="card-text">Click Add button to create new session.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Start loop element -->
+    <div class="col-md-6 col-lg-4 mb-4" v-for="OV in OVs" v-cloak>
+      <div onmouseover="$(this).addClass('card-hovered')" onmouseout="$(this).removeClass('card-hovered')"
+        class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ OV.justName }}<small class="text-muted session-name">
+              #{{ OV.sessionName }}</small> <span v-if="OV.isOnline" class="badge badge-success">online</span><span
+              v-else class="badge badge-danger">offline</span></h5>
+          <p class="card-text">{{ OV.justNote }}</p>
+          <a class="btn btn-sm btn-outline-primary"
+            :href="`javascript:myPopup('${OV.subscriberUrl}', '${OV.justName}','641','481','0','0')`">Open</a>
+          <button class="btn btn-sm text-primary" @click="openModalLog(OV)">Actions</button>
+        </div>
+      </div>
+    </div>
+    <!-- End loop element -->
+  </div>
+</div>
+<!-- Start modal -->
+<div class="modal fade" tabindex="-1" id="modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> {{ header }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div v-show="false">
+                <!-- TODO: Add preview video -->
+                <video muted autoplay id="camera-video-element"></video>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-4 my-1" for="just-name-inputbox">Name</label>
+                <input class="col-md-8 form-control" type="text" id="camera-name-inputbox" v-model="cameraNameInputbox">
+              </div>
+              <div class="form-group row">
+                <label class="col-md-4 my-1" for="camera-note-inputbox">Note</label>
+                <textarea class="col-md-8 form-control" rows="3" id="camera-note-inputbox"
+                  v-model="cameraNoteInputbox"></textarea>
+              </div>
+            </div>
+            <div class="col">
+              <div class="qr-wrapper mb-3" style="text-align: center;">
+                <div id="qrcode" :title="qr" style="display: inline-block;"></div>
+              </div>
+              <div class="directions" v-show="isAddCameraModal">
+                <h5>To add your phone as camera</h5>
+                <ol>
+                  <li>Scan the code using your phone</li>
+                  <li>Open code link using Google Chrome</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End modal -->
+<!-- Start toast -->
+<!-- Position it -->
+<div id="toaster-wrapper" style="position: absolute; top: 50px; right: 50px;">
+  <!-- Start loop element -->
+  <div v-for="toast in toasts" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+      <strong class="mr-auto">{{ toast.header }}</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">{{ toast.body }}</div>
+  </div>
+  <!-- End loop element -->
+</div>
+<!-- End toast -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script src="https://vuejs.org/js/vue.js"></script>
+<script src="/assets/openvidu-browser-2.16.0.js"></script>
+<script src="/assets/qrcode.min.js"></script>
+<script src="/dashboard.js"></script>
+
+<% include foot %>
